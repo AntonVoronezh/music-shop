@@ -1,0 +1,13 @@
+{
+  "name": "music-shop",
+  "scripts": {
+    "start": "npx hardhat node",
+    "cleanAndCompile": "npx hardhat clean && npx hardhat compile"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.12",
+    "prettier": "3.3.3"
+  }
+}
