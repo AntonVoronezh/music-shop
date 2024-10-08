@@ -50,7 +50,7 @@ contract MusicShop {
                  uid: _uid,
                  title: _title,
                  price: _price,
-                 quantity: _quantity,
+                 quantity: _quantity
             })
         );
 
@@ -71,7 +71,7 @@ contract MusicShop {
                 albumUid: albumToBuy.uid,
                 customer: msg.sender,
                 orderAt: block.timestamp,
-                status: OrderStatus.Paid,
+                status: OrderStatus.Paid
             })
         );
 
@@ -90,15 +90,15 @@ contract MusicShop {
         emit OrderDelivered(currentOrder.albumUid, msg.sender);
     }
 
-    function receive() external payable {
+    receive() external payable {
         revert("Use BUY function");
     }
 
     function allAlbums() external view returns(Album[] memory) {
         uint totalAlbums = albums.length;
-        Album memory albumsList = new Album[](totalAlbums);
+        Album[] memory albumsList = new Album[](totalAlbums);
 
-        for(uint265 i; i < totalAlbums; i++) {
+        for(uint256 i = 0; i < totalAlbums; ++i) {
             albumsList[i] = albums[i];
         }
 
