@@ -2,7 +2,8 @@
   "name": "music-shop",
   "scripts": {
     "start": "npx hardhat node",
-    "cleanAndCompile": "npx hardhat clean && npx hardhat compile"
+    "cleanAndCompile": "npx hardhat clean && npx hardhat compile",
+    "front": "npx create-next-app@latest front --typescript"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
