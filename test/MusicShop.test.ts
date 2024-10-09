@@ -60,5 +60,59 @@ describe("MusicShop", function () {
     const expectTimeStamp = block?.timestamp;
 
     await expect(buyTx).to.emit(shop, "AlbumBought").withArgs(uid, buyer.address, expectTimeStamp);
+
+    expect(await shop.currentOrderId()).to.eq(initialOrderId + 1);
+
+    const order = await shop.orders(initialOrderId);
+
+    expect(order.orderId).to.eq(initialOrderId);
+    expect(order.albumUid).to.eq(uid);
+    expect(order.customer).to.eq(buyer.address);
+    expect(order.orderAt).to.eq(expectTimeStamp);
+    expect(order.status).to.eq(0);
+
+    expect((await shop.albums(albumIdxToBuy)).quantity).to.eq(album.quantity - 1n);
+
+  });
+
+  it("should  not allow to buy  via receive", async function () {
+    const { shop, buyer } = await loadFixture(deploy);
+
+   const txData = {
+     to: shop.target,
+     value: 100
+   }
+
+   await expect(buyer.sendTransaction(txData)).to.be.revertedWith("Use BUY function");
+
+  });
+
+  it("should  allow to trigger delivery", async function () {
+    const { shop, buyer } = await loadFixture(deploy);
+
+    const title = "Demo";
+    const price = 100;
+    const uid = ethers.solidityPackedKeccak256(["string"], [title]);
+    const qty = 5;
+    const albumIdxToBuy = 0;
+    const initialOrderId = 0;
+
+    expect(await shop.currentOrderId()).to.eq(initialOrderId);
+
+    const addTx = await shop.addAlbum(uid, title, price, qty);
+    await addTx.wait();
+
+    const buyTx = await shop.connect(buyer).buy(albumIdxToBuy, {value: price});
+    await buyTx.wait();
+
+    const triggerDeliveryTx = await shop.delivered(albumIdxToBuy);
+    await triggerDeliveryTx.wait();
+
+    const order = await shop.orders(initialOrderId);
+
+    expect(order.status).to.eq(1);
+
+    await expect(triggerDeliveryTx).to.emit(shop, "OrderDelivered").withArgs(uid, buyer.address);
+
   });
 });
