@@ -1,6 +1,4 @@
 import { loadFixture, expect, ethers } from "./setup";
-import { AlbumTracker, Album__factory } from "../typechain-types";
-import { ContractTransactionReceipt, BaseContract } from "ethers";
 
 describe("MusicShop", function () {
   async function deploy() {
